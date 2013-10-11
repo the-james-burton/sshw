@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>SSHW Terminal Emulator</title>
+    <script src="js/jquery-1.7.2.js"></script>
+    <script src="js/jquery.mousewheel-min.js"></script>
+    <script src="js/jquery.terminal-0.7.7.js"></script>
+    <link href="css/jquery.terminal.css" rel="stylesheet"/>
+    <script>
+    var websocket;
+    var shell;
+    var last_prompt = null;
+	var host = window.location.hostname;
+	var port = window.location.port;
+	var pcol = window.location.protocol;
+	var root = getContextURLPath();
+	//alert(root);
+    var special = {
+      black:   "\x1b[1;30m",
+      red:     "\x1b[1;31m",
+      green:   "\x1b[1;32m",
+      yellow:  "\x1b[1;33m",
+      blue:    "\x1b[1;34m",
+      magenta: "\x1b[1;35m",
+      cyan:    "\x1b[1;36m",
+      white:   "\x1b[1;37m",
+      reset:   "\x1b[0m",
+      ready:   "]0;~",
+      prompt:  "$"
+    };
+
+    var greetings_message = "Welcome to SSHW";
+
+    jQuery(document).ready(init);
+
+    function send(data) {
+      shell.pause();
+      if(websocket.readyState == websocket.OPEN){
+    	  websocket.send(data);
+      } else {
+        shell.error('not connected!');
+      }
+    }
+    
+	function ssh_login(user, passwd, callback) {
+		var result = $.get( root + '/service/login?user=' + user + '&passwd=' + passwd, function( data ) {
+	           if (data == true) {
+	               callback(user);
+ 			   }
+	           else {
+                   $.get( root + '/service/logout', function() {})
+                   callback(false);
+               }
+		});
+	}
+	
+    function init() {
+      shell = $('body').terminal(function(command, term) {
+        send(command);
+      }, {
+        greetings: greetings_message,
+		onBeforeLogin: this.purge,
+		login: ssh_login,
+        clear: false,
+        exit: false,
+        onBlur: function() {
+            // prevent loosing focus
+            return false;
+        }
+      });
+
+      start_ws();
+    }
+
+    function start_ws() {
+      shell.pause();
+
+      if(!("WebSocket" in window)) {
+        shell.error("** websockets are not supported!")
+      } else {
+    	protocol = 'ws';
+    	host = window.location.hostname;
+    	port = window.location.port;
+    	url = protocol + '://' + host + ':' + port + '/sshw/ssh';
+        websocket = new WebSocket(url);
+        websocket.onopen = function(e) { ws_onopen(e) };
+        websocket.onclose = function(e) { ws_onclose(e) };
+        websocket.onmessage = function(e) { ws_onmessage(e) };
+        websocket.onerror = function(e) { ws_onerror(e) };
+      }
+      shell.resume();
+
+    }
+
+    function ws_onopen(e) {
+      shell.echo(special.white + "connected" + special.reset);
+    }
+
+    function ws_onclose(e) {
+    	shell.logout();
+        shell.echo(special.white + "disconnected" + special.reset);
+      }
+
+    function ws_onerror(e) {
+        //shell.echo(special.red + e + special.reset);
+      }
+
+    function ws_onmessage(e) {
+      try {
+        if(e.data.indexOf(special.prompt) == -1 && e.data.indexOf(special.ready) == -1) {
+            shell.echo(e.data);        	
+        }
+        if (e.data.indexOf(special.ready) != -1) {
+            shell.resume();
+		}
+      } catch(err) {
+        shell.error("** Invalid server response : " + e.data); 
+        if(last_prompt) {
+          shell.set_prompt(last_prompt);
+        }
+      }
+    }
+
+	function getContextURLPath() {
+        var rootUrl = location.protocol;
+        rootUrl = rootUrl+"//"+location.host;
+        var path = location.pathname;
+        var tempStr = path.split('/');
+        rootUrl = rootUrl+"/"+tempStr[1];
+        return rootUrl;
+    }
+    
+    </script>
+  </head>
+<body>
+</body>
