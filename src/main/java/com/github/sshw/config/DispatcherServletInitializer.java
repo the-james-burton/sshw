@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.github.sshw.config;
+package com.github.sshw.config;
 
 import javax.servlet.ServletRegistration.Dynamic;
 
