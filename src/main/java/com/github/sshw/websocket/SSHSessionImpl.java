@@ -58,7 +58,7 @@ public class SSHSessionImpl implements SSHSession {
                 }
             });
             log.info("connecting");
-            ssh.connect("styletools");
+            ssh.connect("127.0.0.1");
             log.info("authenticating: {}", username);
             ssh.authPassword(username, password);
             log.info("starting session");
