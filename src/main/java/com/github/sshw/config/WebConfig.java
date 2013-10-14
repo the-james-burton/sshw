@@ -1,3 +1,23 @@
+/*
+ Copyright (C) 2013 the authors
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy of
+ this software and associated documentation files (the "Software"), to deal in the
+ Software without restriction, including without limitation the rights to use, copy,
+ modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+ and to permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.github.sshw.config;
 
 import org.springframework.context.annotation.Bean;
@@ -19,14 +39,12 @@ import com.github.sshw.websocket.SSHWebSocketHandler;
 @Configuration
 @EnableWebMvc
 @EnableWebSocket
-@ComponentScan(basePackages={"com.github.sshw.rest"})
-public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfigurer  {
+@ComponentScan(basePackages = { "com.github.sshw.rest" })
+public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-
         registry.addHandler(sshWebSocketHandler(), "/ssh");
-
     }
 
     @Bean
@@ -34,35 +52,26 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfi
         return new SSHWebSocketHandler(sshService());
     }
 
-
     @Bean
     public SSHSessionImpl sshService() {
         SSHSessionImpl service = new SSHSessionImpl();
         return service;
     }
 
-    // Allow serving HTML files through the default Servlet
-
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
     }
 
-    /**
-     * Since we don't have any controller logic, simpler to just
-     * define controller for page using View Controller. Note:
-     * had to extend WebMvcConfigurerAdapter to get this functionality
-     * @param registry
-     */
-    //@Override
-    //public void addViewControllers(ViewControllerRegistry registry) {
-    //    registry.addViewController("/").setViewName("home");
-    //}
+    // @Override
+    // public void addViewControllers(ViewControllerRegistry registry) {
+    // registry.addViewController("/").setViewName("home");
+    // }
 
     @Bean
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-        //resolver.setPrefix("/jsp/");
+        // resolver.setPrefix("/jsp/");
         resolver.setSuffix(".jsp");
         return resolver;
     }
