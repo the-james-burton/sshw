@@ -44,7 +44,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfi
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(sshWebSocketHandler(), "/ssh");
+        registry.addHandler(sshWebSocketHandler(), "/ssh").withSockJS();
     }
 
     @Bean

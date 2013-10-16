@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>SSHW Terminal Emulator</title>
+    <script src="js/sockjs-0.3.4.js"></script>
     <script src="js/jquery-1.7.2.js"></script>
     <script src="js/jquery.mousewheel-min.js"></script>
     <script src="js/jquery.terminal-0.7.7.js"></script>
@@ -36,7 +37,7 @@
 
     function send(data) {
       shell.pause();
-      if(websocket.readyState == websocket.OPEN){
+      if(websocket != null){
     	  websocket.send(data);
       } else {
         shell.error('not connected!');
@@ -60,7 +61,7 @@
         send(command);
       }, {
         greetings: greetings_message,
-		onBeforeLogin: this.purge,
+		onBeforeLogin: self.purge,
 		login: ssh_login,
         clear: false,
         exit: false,
@@ -75,22 +76,27 @@
 
     function start_ws() {
       shell.pause();
-
-      if(!("WebSocket" in window)) {
-        shell.error("** websockets are not supported!")
-      } else {
-    	protocol = 'ws';
-    	host = window.location.hostname;
-    	port = window.location.port;
-    	url = protocol + '://' + host + ':' + port + '/sshw/ssh';
-        websocket = new WebSocket(url);
-        websocket.onopen = function(e) { ws_onopen(e) };
-        websocket.onclose = function(e) { ws_onclose(e) };
-        websocket.onmessage = function(e) { ws_onmessage(e) };
-        websocket.onerror = function(e) { ws_onerror(e) };
-      }
+	  host = window.location.hostname;
+	  port = window.location.port;
+	  
+	  if (window.location.protocol == 'http:') {
+	      protocol = 'ws';
+	  } else {
+	      protocol = 'wss';
+	  }
+      url = protocol + '://' + host + ':' + port + '/sshw/ssh';
+      
+      //if(!("WebSocket" in window)) {
+        websocket = new SockJS('/sshw/ssh', undefined, {protocols_whitelist: []});
+      //} else {
+      //  websocket = new WebSocket(url);
+      //}
+      
+      websocket.onopen = function(e) { ws_onopen(e) };
+      websocket.onclose = function(e) { ws_onclose(e) };
+      websocket.onmessage = function(e) { ws_onmessage(e) };
+      websocket.onerror = function(e) { ws_onerror(e) };
       shell.resume();
-
     }
 
     function ws_onopen(e) {
