@@ -1,4 +1,4 @@
-package com.github.sshw.websocket;
+package com.github.sshw.controller;
 /*
 
 The MIT License (MIT)
@@ -23,45 +23,40 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
 
-public class SSHSessionOutput implements Runnable {
+@Controller
+@RequestMapping("/")
+public class TerminalController extends AbstractController {
 
     protected final Logger         log = LoggerFactory.getLogger(getClass());
 
-    private final BufferedReader   in;
-    private WebSocketSession out;
-
-    public SSHSessionOutput(BufferedReader in) {
-        log.info("created");
-        this.in = in;
-    }
+    private SecureRandom random = new SecureRandom();
 
     @Override
-    public void run() {
-        log.info("started");
-        while (true) {
-            try {
-                // readLine will block if nothing to send
-                String line = in.readLine();
-                log.debug("message out {}:{}", out.getId(), line);
-                out.sendMessage(new TextMessage(line));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    @RequestMapping
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+        ModelAndView model = new ModelAndView("terminal");
+        String key = request.getSession().getId();
+        log.info(key);
+        model.addObject("sid", "not implemented");
+        return model;
     }
 
-    public void setWebSocketSession(WebSocketSession session) {
-        log.info("received websocket session");
-        this.out = session;
+    public String nextKey() {
+        return new BigInteger(130, random).toString(32);
     }
 
 }

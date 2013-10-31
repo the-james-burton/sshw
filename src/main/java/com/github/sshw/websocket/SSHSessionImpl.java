@@ -1,27 +1,29 @@
-/*
- Copyright (C) 2013 the authors
-
- Permission is hereby granted, free of charge, to any person obtaining a copy of
- this software and associated documentation files (the "Software"), to deal in the
- Software without restriction, including without limitation the rights to use, copy,
- modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
- and to permit persons to whom the Software is furnished to do so, subject to
- the following conditions:
-
- The above copyright notice and this permission notice shall be included in all
- copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
- PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
 package com.github.sshw.websocket;
+/*
+
+The MIT License (MIT)
+
+Copyright (c) 2013 The Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.PublicKey;
@@ -46,13 +48,13 @@ public class SSHSessionImpl implements SSHSession {
     private BufferedReader   input;
     private OutputStream     output;
 
-    private WebSocketSession socket;
     private SSHSessionOutput sender;
     private Thread           thread;
 
     @Override
     public boolean login(String username, String password) {
         try {
+            logout();
             // ssh.authPublickey(System.getProperty("user.name"));
             log.info("new SSHClient");
             ssh = new SSHClient();
@@ -72,20 +74,13 @@ public class SSHSessionImpl implements SSHSession {
             session.allocateDefaultPTY();
             log.info("starting shell");
             shell = session.startShell();
-            log.info("started");
+            log.info("SSH session established");
             input = new BufferedReader(new InputStreamReader(shell.getInputStream()));
             output = shell.getOutputStream();
-            sender = new SSHSessionOutput(input, socket);
-            thread = new Thread(sender);
-            thread.start();
+            sender = new SSHSessionOutput(input);
         } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                log.info("disconnect");
-                ssh.disconnect();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+            log.error(e.getMessage());
+            finalize();
             return false;
         }
         return true;
@@ -103,25 +98,40 @@ public class SSHSessionImpl implements SSHSession {
     }
 
     @Override
-    protected void finalize() throws Throwable {
-        shell.close();
-        session.close();
-        ssh.disconnect();
+    protected void finalize() {
+        try {
+            shell.close();
+        } catch (Throwable e) {
+        }
+        try {
+            session.close();
+        } catch (Throwable e) {
+        }
+        try {
+            ssh.disconnect();
+        } catch (Throwable e) {
+        }
+        log.info("session finalized");
     }
 
     @Override
     public void setWebSocketSession(WebSocketSession session) {
-        this.socket = session;
+        this.sender.setWebSocketSession(session);
+        thread = new Thread(sender);
+        log.info("starting sending thread");
+        thread.start();
     }
 
     @Override
-    public void logout() {
+    public boolean logout() {
+        log.info("logout");
         try {
-            output.write("exit".getBytes());
+            // output.write("exit".getBytes());
             finalize();
         } catch (Throwable e) {
             e.printStackTrace();
         }
+        return true;
     }
 
 }

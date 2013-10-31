@@ -1,13 +1,38 @@
 <!DOCTYPE HTML>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
+<!-- 
+The MIT License (MIT)
+
+Copyright (c) 2013 The Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ -->
   <head>
     <meta charset="utf-8" />
     <title>SSHW Terminal Emulator</title>
-    <script src="js/sockjs-0.3.4.js"></script>
-    <script src="js/jquery-1.7.2.js"></script>
-    <script src="js/jquery.mousewheel-min.js"></script>
-    <script src="js/jquery.terminal-0.7.7.js"></script>
-    <link href="css/jquery.terminal.css" rel="stylesheet"/>
+<!--     <script src="js/aes.js"></script> -->
+    <script src="static/js/sockjs-0.3.4.js"></script>
+    <script src="static/js/jquery-1.7.2.js"></script>
+    <script src="static/js/jquery.mousewheel-min.js"></script>
+    <script src="static/js/jquery.terminal-0.7.7.js"></script>
+    <link href="static/css/jquery.terminal.css" rel="stylesheet"/>
     <script>
     var websocket;
     var shell;
@@ -16,7 +41,9 @@
 	var port = window.location.port;
 	var pcol = window.location.protocol;
 	var root = getContextURLPath();
-	//alert(root);
+	var key = '${key}';
+	var username = '<sec:authentication property="principal" />';
+	//alert('ID:' + key + ',USERNAME:' + username);
     var special = {
       black:   "\x1b[1;30m",
       red:     "\x1b[1;31m",
@@ -45,6 +72,7 @@
     }
     
 	function ssh_login(user, passwd, callback) {
+      // var encrypted = CryptoJS.AES.encrypt("A Sample Message", "SecretPassphrase", { mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.NoPadding, iv: iv });
 		var result = $.get( root + '/service/login?user=' + user + '&passwd=' + passwd, function( data ) {
 	           if (data == true) {
 	               callback(user);
@@ -55,14 +83,16 @@
                }
 		});
 	}
-	
+
+	//onBeforeLogin: self.purge,
+	//login: ssh_login,
+	//login: false,
+
     function init() {
       shell = $('body').terminal(function(command, term) {
         send(command);
       }, {
         greetings: greetings_message,
-		onBeforeLogin: self.purge,
-		login: ssh_login,
         clear: false,
         exit: false,
         onBlur: function() {
@@ -101,15 +131,17 @@
 
     function ws_onopen(e) {
       shell.echo(special.white + "connected" + special.reset);
+      // link the SSH session established with spring security logon to the websocket session...
+      send(username);
     }
 
     function ws_onclose(e) {
-    	shell.logout();
+    	//shell.logout();
         shell.echo(special.white + "disconnected" + special.reset);
       }
 
     function ws_onerror(e) {
-        //shell.echo(special.red + e + special.reset);
+        shell.echo(special.red + e + special.reset);
       }
 
     function ws_onmessage(e) {

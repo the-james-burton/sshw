@@ -11,6 +11,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<org.springframework-version>4.0.0.BUILD-SNAPSHOT</org.springframework-version>
+		<org.springsecurity-version>3.2.0.RC1</org.springsecurity-version>
 		<org.slf4j-version>1.7.5</org.slf4j-version>
 	</properties>
 
@@ -210,11 +211,46 @@
 			<artifactId>spring-websocket</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
+
+		<!-- spring security is currently overkill -->
+		<!-- https://jira.springsource.org/browse/SEC-2179 -->
+		<!-- 13:25:43 [http-apr-8080-exec-25] DefaultSockJsService - Failed to 
+			create default WebSocketTransportHandler java.lang.IllegalStateException: 
+			No suitable RequestUpgradeStrategy -->
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-			<scope>provided</scope>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${org.springsecurity-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${org.springsecurity-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>${org.springsecurity-version}</version>
+		</dependency>
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>javax.servlet</groupId> -->
+<!-- 			<artifactId>javax.servlet-api</artifactId> -->
+<!-- 			<version>3.1.0</version> -->
+<!-- 			<scope>provided</scope> -->
+<!-- 		</dependency> -->
+
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.servlet</artifactId>
+            <version>3.0</version>
+            <scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.8</version>
 		</dependency>
 
 		<!-- For SockJS -->
@@ -273,6 +309,18 @@
 			<version>1.2</version>
 		</dependency>
 
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.jasypt</groupId> -->
+<!-- 			<artifactId>jasypt-spring3</artifactId> -->
+<!-- 			<version>1.9.1</version> -->
+<!-- 		</dependency> -->
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>

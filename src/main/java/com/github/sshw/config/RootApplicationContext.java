@@ -1,3 +1,5 @@
+package com.github.sshw.config;
+/*
 The MIT License (MIT)
 
 Copyright (c) 2013 The Authors
@@ -18,3 +20,21 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+import com.github.sshw.websocket.SSHSessionManager;
+
+@Configuration
+@Import({WebConfiguration.class, SecurityConfiguration.class})
+public class RootApplicationContext {
+
+    @Bean
+    public SSHSessionManager sshSessionManager() {
+        SSHSessionManager sshSessionManager = new SSHSessionManager();
+        return sshSessionManager;
+    }
+
+}
