@@ -10,8 +10,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<org.springframework-version>4.0.0.BUILD-SNAPSHOT</org.springframework-version>
-		<org.springsecurity-version>3.2.0.RC1</org.springsecurity-version>
+		<org.springframework-version>4.0.0.RELEASE</org.springframework-version>
+		<org.springsecurity-version>3.2.0.RELEASE</org.springsecurity-version>
 		<org.slf4j-version>1.7.5</org.slf4j-version>
 	</properties>
 
@@ -111,7 +111,7 @@
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.1</version>
+				<version>2.2</version>
 				<configuration>
 					<port>8081</port>
 					<!-- <contextFile>src/test/resources/tomcat/context.xml</contextFile> -->
@@ -127,7 +127,8 @@
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>9.0.6.v20130930</version>
+<!-- 				<version>9.0.6.v20130930</version> -->
+				<version>9.0.7.v20131107</version>
 				<configuration>
 					<scanIntervalSeconds>2</scanIntervalSeconds>
 					<httpConnector>

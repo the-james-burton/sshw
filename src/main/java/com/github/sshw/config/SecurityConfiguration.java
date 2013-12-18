@@ -24,6 +24,8 @@ package com.github.sshw.config;
  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,25 +41,34 @@ import com.github.sshw.websocket.SSHSessionManager;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private SSHSessionManager sshSessionManager;
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @Bean
-    public SSHAuthenticationProvider sshAuthentication() {
-        SSHAuthenticationProvider sshAuthentication = new SSHAuthenticationProvider();
-        return sshAuthentication;
-    }
+	@Autowired
+	private SSHSessionManager sshSessionManager;
 
-    @Override
-    protected void registerAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(sshAuthentication());
-        // auth.inMemoryAuthentication().withUser("user").password("password").roles("USER");
-        // auth.apply(new SSHUserDetailsManagerConfigurer<AuthenticationManagerBuilder>());
-    }
+	@Bean
+	public SSHAuthenticationProvider sshAuthentication() {
+		SSHAuthenticationProvider sshAuthentication = new SSHAuthenticationProvider();
+		return sshAuthentication;
+	}
 
-    @Override
-    public void configure(WebSecurity builder) throws Exception {
-        //builder.ignoring().antMatchers("/ssh/**").antMatchers("/static/**");
-    }
+	/*
+	 * TODO - use 'registerAuthentication' in 3.2.0.RC1 and 'configure' in 3.2.0.RELEASE
+	 * but note that 'configure' does not appear to work in tomcat7
+	 */
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth)
+			throws Exception {
+		log.info("registering SSH authentication provider");
+		auth.authenticationProvider(sshAuthentication());
+		// auth.inMemoryAuthentication().withUser("user").password("password").roles("USER");
+		// auth.apply(new
+		// SSHUserDetailsManagerConfigurer<AuthenticationManagerBuilder>());
+	}
+
+	@Override
+	public void configure(WebSecurity builder) throws Exception {
+		// builder.ignoring().antMatchers("/ssh/**").antMatchers("/static/**");
+	}
 
 }

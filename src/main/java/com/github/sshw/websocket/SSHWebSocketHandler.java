@@ -28,10 +28,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.adapter.TextWebSocketHandlerAdapter;
 
-public class SSHWebSocketHandler extends TextWebSocketHandlerAdapter {
+public class SSHWebSocketHandler implements WebSocketHandler {
 
     protected final Logger          log = LoggerFactory.getLogger(getClass());
 
@@ -39,8 +40,11 @@ public class SSHWebSocketHandler extends TextWebSocketHandlerAdapter {
     private SSHSessionManager sshSessionManager;
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String messageText = message.getPayload();
+    public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
+        if (!(message instanceof TextMessage)) {
+        	throw new IllegalStateException("Unexpected WebSocket message type: " + message);
+        }
+        String messageText = ((TextMessage)message).getPayload();
         SSHSession sshSession = sshSessionManager.sessionsByWebsocketID.get(session.getId());
         if (sshSession == null) {
             log.info("linking {}:{}", session.getId(), messageText);
@@ -68,5 +72,17 @@ public class SSHWebSocketHandler extends TextWebSocketHandlerAdapter {
         sshSession.logout();
         sshSessionManager.sessionsByWebsocketID.remove(session.getId());
     }
+
+
+	@Override
+	public void handleTransportError(WebSocketSession session,
+			Throwable exception) throws Exception {
+		log.warn(String.format("TRANSPORT ERROR: %s", exception.getMessage()));
+	}
+
+	@Override
+	public boolean supportsPartialMessages() {
+		return false;
+	}
 
 }
