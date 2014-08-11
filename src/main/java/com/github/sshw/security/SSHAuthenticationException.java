@@ -1,4 +1,4 @@
-package com.github.sshw.websocket;
+package com.github.sshw.security;
 /*
 
 The MIT License (MIT)
@@ -23,22 +23,15 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import java.io.BufferedReader;
-import java.io.OutputStream;
-
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.socket.WebSocketSession;
 
-public interface SSHSession {
+public class SSHAuthenticationException extends AuthenticationException {
 
-    boolean login(String username, String password) throws AuthenticationException;
+    private static final long serialVersionUID = 1L;
 
-    boolean logout();
-
-    BufferedReader getSSHInput();
-
-    OutputStream getSSHOutput();
-
-    void setWebSocketSession(WebSocketSession session);
+    public SSHAuthenticationException(String msg, Throwable t) {
+        super(msg, t);
+        // TODO Auto-generated constructor stub
+    }
 
 }

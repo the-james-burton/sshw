@@ -35,7 +35,10 @@ import net.schmizz.sshj.transport.verification.HostKeyVerifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.socket.WebSocketSession;
+
+import com.github.sshw.security.SSHAuthenticationException;
 
 public class SSHSessionImpl implements SSHSession {
 
@@ -52,7 +55,7 @@ public class SSHSessionImpl implements SSHSession {
     private Thread           thread;
 
     @Override
-    public boolean login(String username, String password) {
+    public boolean login(String username, String password) throws AuthenticationException {
         try {
             logout();
             // ssh.authPublickey(System.getProperty("user.name"));
@@ -81,7 +84,7 @@ public class SSHSessionImpl implements SSHSession {
         } catch (Exception e) {
             log.error(e.getMessage());
             finalize();
-            return false;
+            throw new SSHAuthenticationException(e.getMessage(), e);
         }
         return true;
 

@@ -62,8 +62,8 @@ public class SSHAuthenticationProvider implements AuthenticationProvider {
         //log.info("{}:{}", username, password);
         boolean success = sshSession.login(username, password);
         log.info("SSH login: {}={}", username, success);
-        //authentication.setAuthenticated(result);
         Authentication result = new UsernamePasswordAuthenticationToken(username, password, authorities);
+        //result.setAuthenticated(success);
         log.info("adding SSH session for {}", username);
         sshSessionManager.sessionsByUsername.put(username, sshSession);
         return result;
