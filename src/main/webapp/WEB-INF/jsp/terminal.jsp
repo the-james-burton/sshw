@@ -30,8 +30,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 <!--     <script src="js/aes.js"></script> -->
     <script src="static/js/sockjs-0.3.4.js"></script>
     <script src="static/js/jquery-1.7.2.js"></script>
-    <script src="static/js/jquery.mousewheel-min.js"></script>
-    <script src="static/js/jquery.terminal-0.7.7.js"></script>
+    <!-- <script src="static/js/jquery.mousewheel-min.js"></script> -->
+    <script src="static/js/jquery.terminal-0.8.8.js"></script>
     <link href="static/css/jquery.terminal.css" rel="stylesheet"/>
     <script>
     var websocket;
