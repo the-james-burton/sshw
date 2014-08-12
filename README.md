@@ -3,7 +3,7 @@ sshw
 
 SSH client in a browser, via a JEE webapp
 
-Based upon
+**Built upon...**
 
 JQuery Terminal: http://terminal.jcubic.pl/
 
@@ -13,7 +13,7 @@ Spring WebSockets: http://assets.spring.io/wp/WebSocketBlogPost.html
 
 Spring Security: http://docs.spring.io/spring-security/site/docs/3.2.x/guides/hellomvc.html
 
-With help from...
+**With help from...**
 
 Elixir Web Shell: https://github.com/glejeune/ews
 
