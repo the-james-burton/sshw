@@ -31,17 +31,14 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h1>
-<a name="sshw" class="anchor" href="#sshw"><span class="octicon octicon-link"></span></a>sshw</h1>
-
-<p>SSH client in a browser, via a JEE webapp</p>
-
-<h2>
+        <h2>
 <a name="what-is-it-for" class="anchor" href="#what-is-it-for"><span class="octicon octicon-link"></span></a>What is it for?</h2>
 
 <p>A regular SSH connection is done over TCP port 22. However in most corporate environments, only ports 80 and 443 are open to the internet (for HTTP and HTTPS respectively). This means that is it not possible to use a tool like putty to open an SSH session to a server on the internet when inside a corporate environment. In this case, port 80 or 443 could be repurposed for SSH assuming the corporate firewall allows this.</p>
 
 <p>However, if this server is also hosting JEE webapps, then it is very difficult (and could be impossible) to get an interactive SSH session to such a server from a corporate environment. This is where SSHW steps in. It is designed to offer interactive SSH sessions from a JEE container alongside any other webapps that may be deployed on the server.</p>
+
+<p>The alternative is to use a web SSH client, but do you trust them with your root passwords?</p>
 
 <h2>
 <a name="how-do-i-install-it" class="anchor" href="#how-do-i-install-it"><span class="octicon octicon-link"></span></a>How do I install it?</h2>
@@ -62,6 +59,11 @@
 <a name="is-it-secure" class="anchor" href="#is-it-secure"><span class="octicon octicon-link"></span></a>Is it secure?</h2>
 
 <p>It uses Spring Security, so the password transfer mechanism <em>should</em> be secure. However, I recommend you setup your JEE container to use HTTPS and access it through the resulting HTTPS link.</p>
+
+<h2>
+<a name="is-it-finished" class="anchor" href="#is-it-finished"><span class="octicon octicon-link"></span></a>Is it finished?</h2>
+
+<p>Not really! It works as intended, but there is a fair bit of tidying up and testing to do.</p>
 
 <h2>
 <a name="built-upon" class="anchor" href="#built-upon"><span class="octicon octicon-link"></span></a>Built upon...</h2>
