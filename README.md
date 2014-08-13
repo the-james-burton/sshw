@@ -20,7 +20,7 @@ It will install itself as the root context *sshw*. So if your tomcat instance is
 
 ## Is it secure?
 
-It uses Spring Security, so the password transfer mechanism *should* be secure. However, I recommend you setup your JEE container to use HTTPS and access it through the resulting HTTPS link.
+I make no guarantees about the security of this app. Use **at your own risk**. I am still evaluating the security of it. It does use Spring Security for A&A, so the password transfer mechanism *should* be secure. Also, it *should* use secure websockets via WSS if on a HTTP link. I have not tested this yet. I recommend you setup your JEE container to use HTTPS and access it through the resulting HTTPS link.
 
 ## Is it finished?
 
