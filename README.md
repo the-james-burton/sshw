@@ -4,6 +4,8 @@ A regular SSH connection is done over TCP port 22. However in most corporate env
 
 However, if this server is also hosting JEE webapps, then it is very difficult (and could be impossible) to get an interactive SSH session to such a server from a corporate environment. This is where SSHW steps in. It is designed to offer interactive SSH sessions from a JEE container alongside any other webapps that may be deployed on the server.
 
+The alternative is to use a web SSH client, but do you trust them with your root passwords?
+
 ## How do I install it?
 
 Simply take the latest WAR file from the releases page and deploy it to your Tomcat instance on your server. It may also work with other JEE containers, however I have only performed testing with Tomcat v7 and v8. 
@@ -19,6 +21,10 @@ It will install itself as the root context *sshw*. So if your tomcat instance is
 ## Is it secure?
 
 It uses Spring Security, so the password transfer mechanism *should* be secure. However, I recommend you setup your JEE container to use HTTPS and access it through the resulting HTTPS link.
+
+## Is it finished?
+
+Not really! It works as intended, but there is a fair bit of tidying up and testing to do.
 
 ## Built upon...
 
