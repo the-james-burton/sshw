@@ -3,6 +3,10 @@ sshw
 
 SSH client in a browser, via a JEE webapp
 
+**What does it look like?**
+
+![](https://raw.githubusercontent.com/the-james-burton/sshw/master/doc/sshw-screenshot.png)
+
 **Built upon...**
 
 JQuery Terminal: http://terminal.jcubic.pl/
