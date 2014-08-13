@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Sshw : SSH client in a browser, via a JEE webapp">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Sshw</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/the-james-burton/sshw">View on GitHub</a>
+
+          <h1 id="project_title">Sshw</h1>
+          <h2 id="project_tagline">SSH client in a browser, via a JEE webapp</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/the-james-burton/sshw/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/the-james-burton/sshw/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="sshw" class="anchor" href="#sshw"><span class="octicon octicon-link"></span></a>sshw</h1>
+
+<p>SSH client in a browser, via a JEE webapp</p>
+
+<h2>
+<a name="what-is-it-for" class="anchor" href="#what-is-it-for"><span class="octicon octicon-link"></span></a>What is it for?</h2>
+
+<p>A regular SSH connection is done over TCP port 22. However in most corporate environments, only ports 80 and 443 are open to the internet (for HTTP and HTTPS respectively). This means that is it not possible to use a tool like putty to open an SSH session to a server on the internet when inside a corporate environment. In this case, port 80 or 443 could be repurposed for SSH assuming the corporate firewall allows this.</p>
+
+<p>However, if this server is also hosting JEE webapps, then it is very difficult (and could be impossible) to get an interactive SSH session to such a server from a corporate environment. This is where SSHW steps in. It is designed to offer interactive SSH sessions from a JEE container alongside any other webapps that may be deployed on the server.</p>
+
+<h2>
+<a name="how-do-i-install-it" class="anchor" href="#how-do-i-install-it"><span class="octicon octicon-link"></span></a>How do I install it?</h2>
+
+<p>Simply take the latest WAR file from the releases page and deploy it to your Tomcat instance on your server. It may also work with other JEE containers, however I have only performed testing with Tomcat v7 and v8. </p>
+
+<h2>
+<a name="how-do-i-use-it" class="anchor" href="#how-do-i-use-it"><span class="octicon octicon-link"></span></a>How do I use it?</h2>
+
+<p>It will install itself as the root context <em>sshw</em>. So if your tomcat instance is on your local machine and running on the default port 8080, the URL will be <a href="http://localhost:8080/sshw">http://localhost:8080/sshw</a>.</p>
+
+<h2>
+<a name="what-does-it-look-like" class="anchor" href="#what-does-it-look-like"><span class="octicon octicon-link"></span></a>What does it look like?</h2>
+
+<p><img src="https://raw.githubusercontent.com/the-james-burton/sshw/master/doc/sshw-screenshot.png" alt=""></p>
+
+<h2>
+<a name="is-it-secure" class="anchor" href="#is-it-secure"><span class="octicon octicon-link"></span></a>Is it secure?</h2>
+
+<p>It uses Spring Security, so the password transfer mechanism <em>should</em> be secure. However, I recommend you setup your JEE container to use HTTPS and access it through the resulting HTTPS link.</p>
+
+<h2>
+<a name="built-upon" class="anchor" href="#built-upon"><span class="octicon octicon-link"></span></a>Built upon...</h2>
+
+<p><a href="http://terminal.jcubic.pl/">JQuery Terminal</a></p>
+
+<p><a href="https://github.com/shikhar/sshj">SSHJ</a></p>
+
+<p><a href="http://assets.spring.io/wp/WebSocketBlogPost.html">Spring WebSockets</a></p>
+
+<p><a href="http://docs.spring.io/spring-security/site/docs/3.2.x/guides/hellomvc.html">Spring Security</a></p>
+
+<h2>
+<a name="with-help-from" class="anchor" href="#with-help-from"><span class="octicon octicon-link"></span></a>With help from...</h2>
+
+<p><a href="https://github.com/glejeune/ews">Elixir Web Shell</a></p>
+
+<p><a href="https://github.com/rstoyanchev/spring-websocket-test">Spring WebSocket examples</a></p>
+
+<p><a href="http://codetutr.com/2013/04/09/spring-mvc-easy-rest-based-json-services-with-responsebody/">Spring REST examples</a></p>
+
+<p><a href="http://www.petrikainulainen.net/programming/spring-framework/adding-social-sign-in-to-a-spring-mvc-web-application-configuration/">Spring Social example</a></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Sshw maintained by <a href="https://github.com/the-james-burton">the-james-burton</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
