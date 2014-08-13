@@ -1,7 +1,3 @@
-# sshw
-
-SSH client in a browser, via a JEE webapp
-
 ## What is it for?
 
 A regular SSH connection is done over TCP port 22. However in most corporate environments, only ports 80 and 443 are open to the internet (for HTTP and HTTPS respectively). This means that is it not possible to use a tool like putty to open an SSH session to a server on the internet when inside a corporate environment. In this case, port 80 or 443 could be repurposed for SSH assuming the corporate firewall allows this.
