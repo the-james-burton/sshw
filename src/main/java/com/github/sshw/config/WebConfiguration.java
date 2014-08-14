@@ -78,7 +78,15 @@ public class WebConfiguration extends WebMvcConfigurerAdapter implements WebSock
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("/static/");
-
+        //registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
     }
-
+    
+    /*
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/login").setViewName("login");
+        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+    }
+    */
+    
 }
