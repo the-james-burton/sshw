@@ -52,6 +52,7 @@ public class SSHController {
         return sshService.login(user, passwd);
     }
 
+    @Deprecated
     @RequestMapping(value = "logout", params = { "user" })
     @ResponseBody
     public boolean logout(@RequestParam("user") String user) {

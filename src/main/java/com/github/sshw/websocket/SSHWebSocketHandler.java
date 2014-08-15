@@ -23,6 +23,9 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +38,9 @@ import org.springframework.web.socket.WebSocketSession;
 public class SSHWebSocketHandler implements WebSocketHandler {
 
     protected final Logger          log = LoggerFactory.getLogger(getClass());
-
+    
+    private List<String> logoutCommands = Arrays.asList(new String[]{"logout", "exit"});
+    
     @Autowired
     private SSHSessionManager sshSessionManager;
 
@@ -58,6 +63,12 @@ public class SSHWebSocketHandler implements WebSocketHandler {
             sshSession.getSSHOutput().write((messageText + '\n').getBytes());
             sshSession.getSSHOutput().flush();
         }
+        // if we receive a valid logout command, then close the websocket session.
+        // the system will logout and tidy itself up...
+        if (logoutCommands.contains(messageText.trim().toLowerCase())) {
+            log.info("valid logout command received: {}", messageText);
+            session.close();
+        }
     }
 
     @Override
@@ -69,7 +80,9 @@ public class SSHWebSocketHandler implements WebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         log.info("websocket connection closed: {}", status.getReason());
         SSHSession sshSession = sshSessionManager.sessionsByWebsocketID.get(session.getId());
-        sshSession.logout();
+        if (sshSession != null) {
+            sshSession.logout();
+        }
         sshSessionManager.sessionsByWebsocketID.remove(session.getId());
     }
 

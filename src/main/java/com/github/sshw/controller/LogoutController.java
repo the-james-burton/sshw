@@ -1,4 +1,4 @@
-package com.github.sshw.rest;
+package com.github.sshw.controller;
 /*
 
 The MIT License (MIT)
@@ -23,35 +23,29 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
 
-import com.github.sshw.websocket.SSHSessionManager;
+@Controller
+@RequestMapping("/logout")
+public class LogoutController extends AbstractController {
 
-@Service
-public class SSHServiceImpl implements SSHService {
-
-    protected final Logger   log = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private SSHSessionManager sshSessionManager;
-
-    @Deprecated
+    protected final Logger         log = LoggerFactory.getLogger(getClass());
+    
     @Override
-    public boolean login(String username, String password) {
-        log.info("login");
-        return false;
-        //return sshSessionManager.sessionsByUsername.get(username).login(username, password);
-    }
-
-    @Deprecated
-    @Override
-    public boolean logout(String username) {
-        log.info("logout");
-        return false;
-        //return sshSessionManager.sessionsByUsername.get(username).logout();
+    @RequestMapping
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	
+        request.logout();        
+        return new ModelAndView("redirect:login");
+        
     }
 
 }

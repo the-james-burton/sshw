@@ -26,6 +26,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  -->
   <head>
     <meta charset="utf-8" />
+    <meta http-equiv="cache-control" content="max-age=0" />
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="expires" content="0" />
+	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+	<meta http-equiv="pragma" content="no-cache" />
+    <meta name="${_csrf.headerName}" content="${_csrf.token}"/>
     <title>SSHW Terminal Emulator</title>
 <!--     <script src="js/aes.js"></script> -->
     <script src="static/js/sockjs-0.3.4.js"></script>
@@ -71,6 +77,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
     }
     
+    // *** DEPRECATED IN FAVOUR OF SPRING SECURITY
 	function ssh_login(user, passwd, callback) {
       // var encrypted = CryptoJS.AES.encrypt("A Sample Message", "SecretPassphrase", { mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.NoPadding, iv: iv });
 		var result = $.get( root + '/service/login?user=' + user + '&passwd=' + passwd, function( data ) {
@@ -138,6 +145,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     function ws_onclose(e) {
     	//shell.logout();
         shell.echo(special.white + "disconnected" + special.reset);
+        shell.destroy();
+        shell.purge();
+        //document.location.href = 'logout';
+        document.forms['logout'].submit();
       }
 
     function ws_onerror(e) {
@@ -171,5 +182,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     
     </script>
   </head>
-<body>
+<body>	
+	<form name="logout" action="logout" method="POST" style="display:none;">
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"></input>
+	</form>
 </body>

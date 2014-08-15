@@ -25,6 +25,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  -->
   <head>
     <meta charset="utf-8"></meta>
+    <meta http-equiv="cache-control" content="max-age=0" />
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="expires" content="0" />
+	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+	<meta http-equiv="pragma" content="no-cache" />
+    <meta name="${_csrf.headerName}" content="${_csrf.token}"/>
     <title>SSHW Terminal Emulator</title>
     <link href="static/css/jquery.terminal-0.7.7.css" rel="stylesheet"></link>
     <link href="static/css/login.css" rel="stylesheet"></link>

@@ -44,18 +44,25 @@ public class LoginController extends AbstractController {
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
     	
 		String error = request.getParameter("error");
-		String logout = request.getParameter("logout");
+        String message = request.getParameter("message");
+        String logout = request.getParameter("logout");
 
-		ModelAndView model = new ModelAndView("login");
-		if (error != null) {
-			model.addObject("error", "Login was unsuccessful");
+        ModelAndView model  = new ModelAndView("login");
+
+        if (message != null) {
+            model.addObject("message", message);
+        }
+
+        if (logout != null) {
+            model.addObject("message", "Logout successful");
+        }
+
+        if (error != null) {
+	        log.error(error);
+            model.addObject("error", "Login was unsuccessful");
 		}
- 
-		if (logout != null) {
-			model.addObject("message", "Logout successful");
-		}
+		
         return model;
     }
-
 
 }

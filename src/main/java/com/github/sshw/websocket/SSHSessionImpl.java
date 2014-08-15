@@ -47,7 +47,8 @@ public class SSHSessionImpl implements SSHSession {
     private SSHClient        ssh;
     private Session          session;
     private Shell            shell;
-
+    private String           username;
+    
     private BufferedReader   input;
     private OutputStream     output;
 
@@ -78,6 +79,7 @@ public class SSHSessionImpl implements SSHSession {
             log.info("starting shell");
             shell = session.startShell();
             log.info("SSH session established");
+            this.username = username;
             input = new BufferedReader(new InputStreamReader(shell.getInputStream()));
             output = shell.getOutputStream();
             sender = new SSHSessionOutput(input);
@@ -127,7 +129,7 @@ public class SSHSessionImpl implements SSHSession {
 
     @Override
     public boolean logout() {
-        log.info("logout");
+        log.info("logout: {}", username);
         try {
             // output.write("exit".getBytes());
             finalize();
